@@ -4,7 +4,7 @@ using System.Threading.Channels;
 
 namespace Practice.RegularExpression
 {
-    public class PracticalClass
+    public class PracticeClass
     {
         public static void Task()
         {
