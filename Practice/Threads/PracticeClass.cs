@@ -13,13 +13,13 @@ namespace Practice.Threads
              
         }
 
-        //Таймер
+        //РўР°Р№РјРµСЂ
         //public static void Task()
         //{
         //    int num = 0;
-        //    // устанавливаем метод обратного вызова
+        //    // СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј РјРµС‚РѕРґ РѕР±СЂР°С‚РЅРѕРіРѕ РІС‹Р·РѕРІР°
         //    TimerCallback tm = Count;
-        //    // создаем таймер
+        //    // СЃРѕР·РґР°РµРј С‚Р°Р№РјРµСЂ
 
         //    Timer timer = new Timer(tm, num, 0, 2000);
 
@@ -35,7 +35,7 @@ namespace Practice.Threads
         //}
 
 
-        //Работа с потоками и их синхронизация с помощью lock
+        //Р Р°Р±РѕС‚Р° СЃ РїРѕС‚РѕРєР°РјРё Рё РёС… СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ СЃ РїРѕРјРѕС‰СЊСЋ lock
         //static object locker = new object();
         //public static void Task()
         //{
@@ -45,7 +45,7 @@ namespace Practice.Threads
         //    for (int i = 0; i < 5; i++)
         //    {
         //        Thread myThread = new Thread(Count);
-        //        myThread.Name = "Поток " + i.ToString();
+        //        myThread.Name = "РџРѕС‚РѕРє " + i.ToString();
         //        threads.Add(myThread);
         //    }
 
@@ -62,28 +62,28 @@ namespace Practice.Threads
         //            continue;
         //        }
         //    }
-        //    Console.WriteLine("Конец" + watch.ElapsedMilliseconds);
+        //    Console.WriteLine("РљРѕРЅРµС†" + watch.ElapsedMilliseconds);
         //    Console.ReadLine();
         //}
         //public static void Count()
         //{
-        //    #region Блок кода идущий параллельно
+        //    #region Р‘Р»РѕРє РєРѕРґР° РёРґСѓС‰РёР№ РїР°СЂР°Р»Р»РµР»СЊРЅРѕ
         //    var watch = Stopwatch.StartNew();
 
-        //    Console.WriteLine($"{Thread.CurrentThread.Name} Запущен");
+        //    Console.WriteLine($"{Thread.CurrentThread.Name} Р—Р°РїСѓС‰РµРЅ");
         //    for(int i = 0; i < 10; i++)
         //    {
-        //        Console.WriteLine($"{Thread.CurrentThread.Name} вычисление");
+        //        Console.WriteLine($"{Thread.CurrentThread.Name} РІС‹С‡РёСЃР»РµРЅРёРµ");
         //        Thread.Sleep(100);
         //    }
 
-        //    Console.WriteLine($"{Thread.CurrentThread.Name} цикл завершен");
+        //    Console.WriteLine($"{Thread.CurrentThread.Name} С†РёРєР» Р·Р°РІРµСЂС€РµРЅ");
 
-        //    Console.WriteLine($"{Thread.CurrentThread.Name} вычисления:  {watch.ElapsedMilliseconds}");
+        //    Console.WriteLine($"{Thread.CurrentThread.Name} РІС‹С‡РёСЃР»РµРЅРёСЏ:  {watch.ElapsedMilliseconds}");
         //    #endregion
 
         //    watch = Stopwatch.StartNew();
-        //    #region блок кода идущий последовательно
+        //    #region Р±Р»РѕРє РєРѕРґР° РёРґСѓС‰РёР№ РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕ
         //    lock (locker)
         //    {
         //        x = 1;
@@ -95,7 +95,7 @@ namespace Practice.Threads
         //        }
         //    }
         //    #endregion
-        //    Console.WriteLine($"{Thread.CurrentThread.Name} конец: {watch.ElapsedMilliseconds} ");
+        //    Console.WriteLine($"{Thread.CurrentThread.Name} РєРѕРЅРµС†: {watch.ElapsedMilliseconds} ");
         //}
     }
 }
