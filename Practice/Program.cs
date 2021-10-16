@@ -1,7 +1,4 @@
 ﻿using System;
-using Practice.Threads;
-using System.Threading;
-using System.Threading.Tasks;
+using Practice.SimpleTasks;
 Console.WriteLine("Hello from Practice");
 
-PracticeClass.Task();

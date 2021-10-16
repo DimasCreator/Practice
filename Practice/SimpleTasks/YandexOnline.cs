@@ -11,10 +11,36 @@ namespace Practice.SimpleTasks
     /// </summary>
     public class YandexOnline
     {
-        public static string Task1(int n)
+        /// <summary>
+        /// Вывести все простые числа из диапазона заданного пользователем
+        /// Условность, что число больше 2
+        /// </summary>
+        public static LinkedList<int> Task1(int n)
         {
-            return "";
+            LinkedList<int> numbersList = new LinkedList<int>();
+            for(int i = 2; i <= n; i++)
+            {
+                if (IsSimple(i))
+                {
+                    numbersList.AddLast(i);
+                }
+            }
+            return numbersList;
         }
+        private static bool IsSimple(int number)
+        {
+            double sqrt = Math.Sqrt(number);
+            for(int i = 2; i <= sqrt; i++)
+            {
+                if (number % i == 0)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+
 
         public static string Task2(int[] array)
         {
