@@ -93,7 +93,7 @@ namespace Algorithms.SortingAlgorithms
         /// At each iteration, finds the worst element of the unsorted sequence and puts it at the end of the sorted sequence.
         /// </summary>
         /// <param name="array">Sortable array</param>
-        private static void SelectionSort(int[] array)
+        public static void SelectionSort(int[] array)
         {
             for (var i = 0; i < array.Length; i++)
             {
@@ -107,6 +107,34 @@ namespace Algorithms.SortingAlgorithms
                 }
                 (array[i], array[indexMin]) = (array[indexMin], array[i]);
             }
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="array">Sortable array</param>
+        public static void MergeSort(int[] array)
+        {
+            if (array.Length > 1)
+            {
+                MergeSort(array, 0, array.Length - 1);
+            }
+        }
+
+        private static void MergeSort(int[] array, int leftIndex, int rightIndex)
+        {
+            if (leftIndex < rightIndex)
+            {
+                int middleIndex = (leftIndex + rightIndex) / 2;
+                MergeSort(array, leftIndex, middleIndex);
+                MergeSort(array, middleIndex + 1, rightIndex);
+                Merge(array, leftIndex, middleIndex, rightIndex);
+            }
+        }
+
+        private static void Merge(int[] array, int leftIndex, int middleIndex, int rightIndex)
+        {
+            
         }
     }
 }

@@ -1,15 +1,18 @@
 ﻿using System;
+using System.Threading.Channels;
 using Algorithms.SimpleNumericAlgorithms;
 using Algorithms.SortingAlgorithms;
 
 Console.WriteLine("Hello from Algorithms");
+int[] array1 = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+int[] array2 = {9, 8, 7, 6, 5, 4, 3, 2, 1};
+int[] array3 = {1, 2, 3, 1, 2, 3, 1, 2, 3, 4, 5, 6, 7};
+int[] array4 = {1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 7, 8, 9, 5, 6, 7};
 
-
-
-
-
-
-
+Sorter.MergeSort(array1);
+Sorter.MergeSort(array2);
+Sorter.MergeSort(array3);
+Sorter.MergeSort(array4);
 
 ////SortedTest
 //Console.WriteLine("Insertion");
