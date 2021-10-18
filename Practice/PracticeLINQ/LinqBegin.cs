@@ -4,6 +4,10 @@ using System.Collections.Generic;
 
 namespace Practice.PracticeLINQ
 {
+    /// <summary>
+    /// Класс практики Linq
+    /// Решение всех задач нацелено на наименьшее количество проходов по последовательности
+    /// </summary>
     public static class LinqBegin
     {
         /// <summary>
@@ -92,6 +96,7 @@ namespace Practice.PracticeLINQ
             var answer = sequence.Sum(s => s?.Length);
             Console.WriteLine(answer);
         }
+        ///ПОТЕСТИТЬ НА СКОРОСТЬ РАЗЛИЧНЫЕ ВАРИАНТЫ
         /// <summary>
         /// Дана целочисленная последовательность.
         /// Найти количество ее отрицательных элементов, а также их сумму.
@@ -100,7 +105,48 @@ namespace Practice.PracticeLINQ
         public static void Task7()
         {
             List<int> sequence = new List<int>() {-1, -2, -3, -4, -5, 1, 2, 3, 4, 5};
-            var answer = sequence.Where(i => i < 0).Sum();
+            var answer = sequence.Aggregate((Count: 0, Sum: 0),
+                (accum, value) => value < 0 ? (Count: accum.Count + 1, Sum: accum.Sum + value) : accum);
+            Console.WriteLine(answer.Count + " " + answer.Sum);
+        }
+        /// <summary>
+        /// Дана целочисленная последовательность.
+        /// Найти количество ее положительных двузначных элементов,
+        /// а также их среднее арифметическое (как вещественное число).
+        /// Если требуемые элементы отсутствуют, то дважды вывести 0 (первый раз как целое, второй — как вещественное).
+        /// </summary>
+        public static void Task8()
+        {
+            List<int> sequence = new List<int>() {-1, -2, -31, -40, -5, 1, 2, 23, 44, 5543, 213};
+            var answer = sequence.Aggregate((Count: 0, Sum: 0),
+                (accum, value) => value > 9 && value < 100 ? 
+                    (Count: accum.Count + 1, Sum: accum.Sum + value) : accum);
+            Console.WriteLine(answer.Count + " " + (double)answer.Sum / answer.Count);
+        }
+        /// <summary>
+        /// Дана целочисленная последовательность.
+        /// Вывести ее минимальный положительный элемент или число 0,
+        /// если последовательность не содержит положительных элементов.
+        /// </summary>
+        public static void Task9()
+        {
+            IEnumerable<int> sequence = new List<int>() {-1, -2, -31, -40, -5, 2, 2, 23, 44, 5543, 213};
+            var answer = sequence.Aggregate((Answer: 0, Min: int.MaxValue),
+                (accum, next) => next > 0 && next < accum.Min ? (Answer: next, Min: next) : accum);
+            Console.WriteLine(answer.Answer);
+        }
+        /// <summary>
+        /// Дано целое число L (> 0) и строковая последовательность A.
+        /// Строки последовательности A содержат только заглавные буквы латинского алфавита.
+        /// Среди всех строк из A, имеющих длину L, найти наибольшую (в смысле лексикографического порядка).
+        /// Вывести эту строку или пустую строку, если последовательность не содержит строк длины L.
+        /// </summary>
+        public static void Task10()
+        {
+            int L = 5;
+            List<string> sequence = new List<string>()
+                {"DSACS", "DSSCS", "CMSKAMCKAS", "KCMSAK", "MSCK","CMMA","MVDK","KDS"};
+            var answer = sequence.OrderBy(s => s).FirstOrDefault(s => s.Length == L);
             Console.WriteLine(answer);
         }
     }
