@@ -1,6 +1,6 @@
 ﻿using System;
-using Practice.PracticeLINQ;
+using Practice.SimpleTasks;
 Console.WriteLine("Hello from Practice");
 
 
-LinqBegin.Task31();
+T3.Task();
