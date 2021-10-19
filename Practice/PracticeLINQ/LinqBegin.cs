@@ -366,7 +366,7 @@ namespace Practice.PracticeLINQ
             int K2 = 7;
             List<string> sequence = new List<string>()
                 {"A3", "B2", "C", "AA3", "AB4", "AC", "AA1", "AA2", "A4C"};
-            var answer = sequence.Take(K1 - 1).Union(sequence.Skip(K2)).Average(s => s.Length);
+            var answer = sequence.Take(K1 - 1).Concat(sequence.Skip(K2)).Average(s => s.Length);
             Console.WriteLine(answer);
         }
         /// <summary>
@@ -382,6 +382,81 @@ namespace Practice.PracticeLINQ
             foreach (var num in answer)
             {
                 Console.Write(num + " ");
+            }
+        }
+        /// <summary>
+        /// Дано целое число L (> 0) и последовательность непустых строк A.
+        /// Строки последовательности содержат только цифры и заглавные буквы латинского алфавита.
+        /// Из элементов A, предшествующих первому элементу, длина которого превышает L,
+        /// извлечь строки, оканчивающиеся буквой.
+        /// Полученную последовательность отсортировать по убыванию длин строк,
+        /// а строки одинаковой длины — в лексикографическом порядке по возрастанию.
+        /// </summary>
+        public static void Task28()
+        {
+            int L = 3;
+            IEnumerable<string> sequence = new List<string>()
+                {"KNKD4M", "MCKD23KDC", "9KCMDK3", "KAMK5A", "KVMK5K", "KC3", "MVK23", "DKM"};
+            var answer = sequence.TakeWhile(s => s.Length != L).Where(s => Char.IsLetter(s[^1]))
+                .OrderByDescending(s => s.Length).ThenBy(s => s);
+            foreach (var str in answer)
+            {
+                Console.Write(str + " ");
+            }
+        }
+        /// <summary>
+        /// Даны целые числа D и K (K > 0) и целочисленная последовательность A.
+        /// Найти теоретикомножественное объединение двух фрагментов A:
+        /// первый содержит все элементы до первого элемента, большего D (не включая его),
+        /// а второй — все элементы, начиная с элемента с порядковым номером K.
+        /// Полученную последовательность (не содержащую одинаковых элементов) отсортировать по убыванию.
+        /// </summary>
+        public static void Task29()
+        {
+            int K = 5;
+            int D = 7;
+            IEnumerable<int> sequence = new List<int>() {4, 3, 6, 8, -12, 9, 4, -5, 6, -4, 6};
+            var answer = sequence.TakeWhile(i => i < D).Union(sequence.Skip(K - 1)).OrderByDescending(i => i);
+            foreach (var num in answer)
+            {
+                Console.Write(num + " ");
+            }
+        }
+        /// <summary>
+        /// Дано целое число K (> 0) и целочисленная последовательность A.
+        /// Найти теоретикомножественную разность двух фрагментов A:
+        /// первый содержит все четные числа,
+        /// а второй — все числа с порядковыми номерами, большими K.
+        /// В полученной последовательности (не содержащей одинаковых элементов) поменять порядок элементов на обратный.
+        /// </summary>
+        public static void Task30()
+        {
+            int K = 6;
+            IEnumerable<int> sequence = new List<int>() {4, 2, 2, 3, 6, 8, -12, 9, 4, -5, 6, -4, 6, 14, 14};
+            var answer = sequence.Where(i => i % 2 == 0).Except(sequence.Skip(K)).Reverse();
+            foreach (var num in answer)
+            {
+                Console.Write(num + " ");
+            }
+        }
+        /// <summary>
+        /// Дано целое число K (> 0) и последовательность непустых строк A.
+        /// Строки последовательности содержат только цифры и заглавные буквы латинского алфавита.
+        /// Найти теоретикомножественное пересечение двух фрагментов A:
+        /// первый содержит K начальных элементов, а второй — все элементы, расположенные после последнего элемента, оканчивающегося цифрой.
+        /// Полученную последовательность (не содержащую одинаковых элементов) отсортировать по возрастанию длин строк,
+        /// а строки одинаковой длины — в лексикографическом порядке по возрастанию.
+        /// </summary>
+        public static void Task31()
+        {
+            int K = 5;
+            IEnumerable<string> sequence = new List<string>()
+                {"KNKD4M", "MCKD23KDC", "9KCMDK3", "KAMK5A", "KVMK5K", "KC3", "MVK23", "DKM"};
+            var answer = sequence.Take(K).Intersect(sequence.Reverse().SkipWhile(s => Char.IsNumber(s[^1])))
+                .OrderBy(s => s.Length).ThenBy(s => s);
+            foreach (var str in answer)
+            {
+                Console.Write(str + " ");
             }
         }
     }
