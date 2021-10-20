@@ -459,5 +459,176 @@ namespace Practice.PracticeLINQ
                 Console.Write(str + " ");
             }
         }
+        /// <summary>
+        /// Дана последовательность непустых строк A.
+        /// Получить последовательность символов, каждый элемент которой является начальным символом соответствующей строки из A.
+        /// Порядок символов должен быть обратным по отношению к порядку элементов исходной последовательности.
+        /// </summary>
+        public static void Task32()
+        {
+            IEnumerable<string> sequence = new List<string>()
+                {"KNKD4M", "MCKD23KDC", "9KCMDK3", "KAMK5A", "KVMK5K", "KC3", "MVK23", "DKM"};
+            var answer = sequence.Select(s => s[0]).Reverse();
+            foreach (var c in answer)
+            {
+                Console.WriteLine(c);
+            }
+        }
+        /// <summary>
+        /// Дана целочисленная последовательность.
+        /// Обрабатывая только положительные числа, получить последовательность их последних цифр и
+        /// удалить в полученной последовательности все вхождения одинаковых цифр, кроме первого. (Первого чего? Вхождения? или числа?)
+        /// Порядок полученных цифр должен соответствовать порядку исходных чисел.
+        /// </summary>
+        public static void Task33()
+        {
+            IEnumerable<int> sequence = new List<int>() {4, 2, 2, 3, 6, 8, -12, 9, 4, -5, 6, -4, 6, 14, 14};
+            var answer = sequence.Where(i => i > 0).Select(i => i % 10).Distinct();
+            foreach (var number in answer)
+            {
+                Console.Write(number + " ");
+            }
+        }
+        /// <summary>
+        /// Дана последовательность положительных целых чисел.
+        /// Обрабатывая только нечетные числа, получить последовательность их строковых представлений и
+        /// отсортировать ее в лексикографическом порядке по возрастанию.
+        /// </summary>
+        public static void Task34()
+        {
+            IEnumerable<int> sequence = new List<int>() {4, 2, 2, 3, 6, 8, 12, 9, 4, 5, 6, 4, 6, 14, 14, 15, 17, 13};
+            var answer = sequence.Where(i => i % 2 != 0).Select(i => i.ToString()).OrderBy(s => s);
+            foreach (var str in answer)
+            {
+                Console.Write(str + " ");
+            }
+        }
+        /// <summary>
+        /// Дана целочисленная последовательность.
+        /// Получить последовательность чисел, каждый элемент которой равен
+        /// произведению соответствующего элемента исходной последовательности на его порядковый номер (1, 2, ...).
+        /// В полученной последовательности удалить все элементы, не являющиеся двузначными,
+        /// и поменять порядок оставшихся элементов на обратный.
+        /// </summary>
+        public static void Task35()
+        {
+            IEnumerable<int> sequence = new List<int>() {4, 2, 2, 3, 6, 8, 12, 9, 4, 5, 6, 4, 6, 14, 14, 15, 17, 13};
+            var answer = sequence.Select((number, index) => number * index).Where(i => i < 9 || i > 99).Reverse();
+            foreach (var number in answer)
+            {
+                Console.Write(number + " ");
+            }
+        }
+        /// <summary>
+        /// Дана последовательность непустых строк.
+        /// Получить последовательность символов, которая определяется следующим образом:
+        /// если соответствующая строка исходной последовательности имеет нечетную длину,
+        /// то в качестве символа берется первый символ этой строки;
+        /// в противном случае берется последний символ строки.
+        /// Отсортировать полученные символы по убыванию их кодов.
+        /// </summary>
+        public static void Task36()
+        {
+            IEnumerable<string> sequence = new List<string>()
+                {"kscmkds", "kmdksv", "utnrb", "kenffjpb", "pekjv", "njgrbbd", "teyduv"};
+            var answer = sequence.Select(s => s.Length % 2 != 0 ? s[0] : s[^1]).OrderByDescending(c => c);
+            foreach (var c in answer)
+            {
+                Console.Write(c + " ");
+            }
+        }
+        /// <summary>
+        /// Дана строковая последовательность A.
+        /// Строки последовательности содержат только заглавные буквы латинского алфавита.
+        /// Получить новую последовательность строк, элементы которой определяются по соответствующим элементам A следующим образом:
+        /// пустые строки в новую последовательность не включаются,
+        /// а к непустым приписывается порядковый номер данной строки в исходной последовательности
+        /// (например, если пятый элемент A имеет вид «ABC», то в полученной последовательности он будет иметь вид «ABC5»).
+        /// При нумерации должны учитываться и пустые строки последовательности A.
+        /// Отсортировать полученную последовательность в лексикографическом порядке по возрастанию.
+        /// </summary>
+        public static void Task37()
+        {
+            IEnumerable<string> sequence = new List<string>()
+                {"VFKSKFS", "OEMDF", "", "VFLDS", "VLSFDF", "", "MBKGDLG", "LEPCM", "DMSL"};
+            var answer = sequence.Select((str, index) => str.Length != 0 ? str + index : str).Where(s => s.Length != 0)
+                .OrderBy(s => s);
+            foreach (var str in answer)
+            {
+                Console.Write(str + " ");
+            }
+        }
+        /// <summary>
+        /// Дана целочисленная последовательность A.
+        /// Получить новую последовательность чисел,
+        /// элементы которой определяются по соответствующим элементам последовательности A следующим образом:
+        /// если порядковый номер элемента A делится на 3 (3, 6, ...), то этот элемент в новую последовательность не включается;
+        /// если остаток от деления порядкового номера на 3 равен 1 (1, 4, ...), то в
+        /// новую последовательность добавляется удвоенное значение этого элемента;
+        /// в противном случае (для элементов A с номерами 2, 5, ...) элемент добавляется в новую последовательность без изменений.
+        /// В полученной последовательности сохранить исходный порядок следования элементов.
+        /// </summary>
+        public static void Task38()
+        {
+            IEnumerable<int> sequence = new List<int>() {1, 4, 5, 2, 3, 4, 2, 1, 5, 6, 8, 3, 5, 4, 6, 2, 4, 6, 7};
+            var answer =
+                sequence.Select((number, index) => index % 3 == 0 ? number : index % 3 == 1 ? number * 2 : number)
+                    .Where((_, index) => index % 3 != 0);
+            foreach (var number in answer)
+            {
+                Console.Write(number + " ");
+            }
+        }
+        /// <summary>
+        /// Дана строковая последовательность A.
+        /// Получить последовательность цифровых символов,
+        /// входящих в строки последовательности A (символы могут повторяться).
+        /// Порядок символов должен соответствовать порядку строк A и порядку следования символов в каждой строке.
+        /// Указание. Использовать метод SelectMany с учетом того, что строка может интерпретироваться как последовательность символов.
+        /// </summary>
+        public static void Task39()
+        {
+            IEnumerable<string> sequence = new List<string>()
+                {"kscmkd42s", "kmdks5v", "utn1rb", "kenffjpb", "pe89kjv", "njgrbb5d", "teydu9v"};
+            var answer = sequence.SelectMany(s => s.ToCharArray(), (_, c) => c).Where(Char.IsNumber);
+            foreach (var number in answer)
+            {
+                Console.Write(number + " ");
+            }
+        }
+        /// <summary>
+        /// Дано число K (> 0) и строковая последовательность A.
+        /// Получить последовательность символов, содержащую символы всех строк из A,
+        /// имеющих длину, большую или равную K (символы могут повторяться).
+        /// В полученной последовательности поменять порядок элементов на обратный.
+        /// </summary>
+        public static void Task40()
+        {
+            int K = 5;
+            IEnumerable<string> sequence = new List<string>()
+                {"kscmkd42s", "kmdks5v", "dsaf", "kenffjpb", "dls", "njgrbb5d", "teydu9v"};
+            var answer = sequence.Where(s => s.Length >= K).SelectMany(str => str.ToCharArray(), (_, c) => c);
+            foreach (var c in answer)
+            {
+                Console.Write(c + " ");
+            }
+        }
+        /// <summary>
+        /// Дано целое число K (> 0) и строковая последовательность A.
+        /// Каждый элемент последовательности представляет собой несколько слов из заглавных латинских букв, разделенных символами «.» (точка).
+        /// Получить последовательность строк, содержащую все слова длины K из элементов A в лексикографическом порядке по возрастанию (слова могут повторяться).
+        /// </summary>
+        public static void Task41()
+        {
+            int K = 4;
+            IEnumerable<string> sequence = new List<string>()
+                {"DS.FSV.DSFD.DSA.EWQR.CVCZ", "DSA.CXZ.FDA.EW.G", "D.S.F.C", "CDA.SDA.W.REWF"};
+            var answer = sequence.Select(s => s.Split('.')).SelectMany(s => s).Where(s => s.Length == K)
+                .OrderBy(s => s);
+            foreach (var str in answer)
+            {
+                Console.Write(str + " ");
+            }
+        }
     }
 }
