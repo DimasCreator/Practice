@@ -3,4 +3,4 @@ using Practice.PracticeLINQ;
 Console.WriteLine("Hello from Practice");
 
 
-LinqBegin.Task41();
+LinqBegin.Task46();

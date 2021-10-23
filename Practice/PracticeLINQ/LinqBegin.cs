@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Practice.PracticeLINQ
 {
@@ -629,6 +630,140 @@ namespace Practice.PracticeLINQ
             {
                 Console.Write(str + " ");
             }
+        }
+        /// <summary>
+        /// Дана последовательность непустых строк.
+        /// Получить последовательность символов, которая определяется следующим образом:
+        /// для строк с нечетными порядковыми номерами (1, 3, ...) в последовательность символов включаются
+        /// все прописные(верхний регистр) латинские буквы, содержащиеся в этих строках,
+        /// а для строк с четными номерами (2, 4, ...) — все их строчные(нижний регистр) латинские буквы.
+        /// В полученной последовательности символов сохранить их исходный порядок следования.
+        /// </summary>
+        public static void Task42()
+        {
+            IEnumerable<string> sequence = new List<string>()
+                {"kscDKCmkd42s", "kmKSDdks5v", "dsMVaf", "kenffSKMDjpb", "dlSs", "njSDgrbbDS5d", "tSDeydDu9v"};
+            var answer = sequence.SelectMany((str, index) =>
+                index % 2 == 0 ? str.Where(Char.IsLower) : str.Where(Char.IsUpper));
+            foreach (var c in answer)
+            {
+                Console.Write(c + " ");
+            }
+        }
+        /// <summary>
+        /// Дано целое число K (> 0) и последовательность непустых строк A.
+        /// Получить последовательность символов, которая определяется следующим образом:
+        /// для первых K элементов последовательности A в новую последовательность заносятся символы,
+        /// стоящие на нечетных позициях данной строки,
+        /// а для остальных элементов A — символы на четных позициях.
+        /// В полученной последовательности поменять порядок элементов на обратный.
+        /// </summary>
+        public static void Task43()
+        {
+            int K = 5;
+            IEnumerable<string> sequence = new List<string>()
+                {"kscDKCmkd42s", "kmKSDdks5v", "dsMVaf", "kenffSKMDjpb", "dlSs", "njSDgrbbDS5d", "tSDeydDu9v"};
+            var answer = sequence.SelectMany((str, index) =>
+                index < K ? str.Where((_, i) => i % 2 != 0) : str.Where((_, i) => i % 2 == 0)).Reverse();
+            foreach (var c in answer)
+            {
+                Console.Write(c + " ");
+            }
+        }
+        /// <summary>
+        /// Даны целые числа K1 и K2 и целочисленные последовательности A и B.
+        /// Получить последовательность, содержащую все числа из A, большие K1, и все числа из B, меньшие K2.
+        /// Отсортировать полученную последовательность по возрастанию.
+        /// </summary>
+        public static void Task44()
+        {
+            int K1 = 4;
+            int K2 = 6;
+            IEnumerable<int> sequence1 = new List<int>() {1, 4, 7, 4, 3, 9, 6, 5, 2, 7, 5, 6};
+            IEnumerable<int> sequence2 = new List<int>() {1, 4, 7, 4, 3, 9, 6, 5, 2, 7, 5, 6};
+            var answer = sequence1.Where(i => i > K1).Concat(sequence2.Where(i => i < K2)).OrderBy(i => i);
+            foreach (var i in answer)
+            {
+                Console.Write(i + " ");
+            }
+        }
+        /// <summary>
+        /// Даны целые положительные числа L1 и L2 и строковые последовательности A и B.
+        /// Строки последовательностей содержат только цифры и заглавные буквы латинского алфавита.
+        /// Получить последовательность, содержащую все строки из A длины L1 и все строки из B длины L2.
+        /// Отсортировать полученную последовательность в лексикографическом порядке по убыванию.
+        /// </summary>
+        public static void Task45()
+        {
+            int L1 = 4;
+            int L2 = 5;
+            IEnumerable<string> sequence1 = new List<string>() {"12LVM43", "LDPS456VD", "KDDLS", "9334", "KVDK93L"};
+            IEnumerable<string> sequence2 = new List<string>() {"LVD3L", "OFKDL21M", "MCKKS4", "KSDS", "302WE"};
+            var answer = sequence1.Where(s => s.Length == L1).Concat(sequence2.Where(s => s.Length == L2))
+                .OrderByDescending(s => s);
+            foreach (var str in answer)
+            {
+                Console.Write(str + " ");
+            }
+        }
+        /// <summary>
+        /// Даны последовательности положительных целых чисел A и B;
+        /// все числа в каждой последовательности различны.
+        /// Найти последовательность всех пар чисел, удовлетворяющих следующим условиям:
+        /// первый элемент пары принадлежит последовательности A,
+        /// второй принадлежит B, и оба элемента оканчиваются одной и той же цифрой.
+        /// Результирующая последовательность называется внутренним объединением последовательностей A и B по ключу,
+        /// определяемому последними цифрами исходных чисел.
+        /// Представить найденное объединение в виде последовательности строк, содержащих первый и второй элементы пары,
+        /// разделенные дефисом, например, «49-129».
+        /// Порядок следования пар должен определяться исходным порядком элементов последовательности A,
+        /// а для равных первых элементов порядком элементов последовательности B.
+        /// </summary>
+        public static void Task46()//TODO не готово!!!
+        {
+            IEnumerable<int> sequence1 = new List<int>() {1, 4, 71, 33, 9, 6, 22, 7, 5, 101};
+            IEnumerable<int> sequence2 = new List<int>() {3, 63, 251, 52, 43};
+            var answer = sequence1.Join(sequence2, num1 => num1, num2 => num2,
+                (num1, num2) => num1 % 10 == num2 % 10 ? $"{num1}-{num2}" : "");
+            foreach (var pair in answer)
+            {
+                Console.WriteLine(pair);
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public static void Task47()
+        {
+            
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public static void Task48()
+        {
+            
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public static void Task49()
+        {
+            
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public static void Task50()
+        {
+            
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public static void Task51()
+        {
+            
         }
     }
 }
