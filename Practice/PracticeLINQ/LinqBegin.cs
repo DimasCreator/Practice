@@ -719,49 +719,173 @@ namespace Practice.PracticeLINQ
         /// Порядок следования пар должен определяться исходным порядком элементов последовательности A,
         /// а для равных первых элементов порядком элементов последовательности B.
         /// </summary>
-        public static void Task46()//TODO не готово!!!
+        public static void Task46()
         {
             IEnumerable<int> sequence1 = new List<int>() {1, 4, 71, 33, 9, 6, 22, 7, 5, 101};
             IEnumerable<int> sequence2 = new List<int>() {3, 63, 251, 52, 43};
-            var answer = sequence1.Join(sequence2, num1 => num1, num2 => num2,
-                (num1, num2) => num1 % 10 == num2 % 10 ? $"{num1}-{num2}" : "");
+            var answer = sequence1.Join(sequence2, num1 => num1 % 10, num2 => num2 % 10,
+                (num1, num2) => $"{num1}-{num2}");
             foreach (var pair in answer)
             {
                 Console.WriteLine(pair);
             }
         }
         /// <summary>
-        /// 
+        /// Даны последовательности положительных целых чисел A и B; все числа в каждой последовательности различны.
+        /// Найти внутреннее объединение A и B, пары в котором должны удовлетворять следующему условию:
+        /// последняя цифра первого элемента пары (из A) должна совпадать с первой цифрой второго элемента пары (из B).
+        /// Представить найденное объединение в виде последовательности строк, содержащих первый и второй элементы пары,
+        /// разделенные двоеточием, например, «49:921». Порядок следования пар должен определяться исходным порядком
+        /// элементов последовательности A, а для равных первых элементов пар — лексикографическим порядком строковых
+        /// представлений вторых элементов (по возрастанию).
         /// </summary>
-        public static void Task47()
+        public static void Task47()//TODO непойму как делать сортировку
         {
-            
+            IEnumerable<int> sequence1 = new List<int>() {1, 4, 71, 33, 9, 6, 22, 7, 5, 101};
+            IEnumerable<int> sequence2 = new List<int>() {3, 63, 251, 52, 43};
+            var answer = sequence1.Join(sequence2, num1 => (num1 % 10).ToString()[0], num2 => num2.ToString().First(),
+                (num1, num2) => $"{num1}:{num2}");
+            foreach (var pair in answer)
+            {
+                Console.WriteLine(pair);
+            }
         }
         /// <summary>
-        /// 
+        /// Даны строковые последовательности A и B;
+        /// все строки в каждой последовательности различны, имеют ненулевую длину и содержат только цифры и заглавные буквы латинского алфавита.
+        /// Найти внутреннее объединение A и B, каждая пара которого должна содержать строки одинаковой длины.
+        /// Представить найденное объединение в виде последовательности строк, содержащих первый и второй элементы пары,
+        /// разделенные двоеточием, например, «AB:CD».
+        /// Порядок следования пар должен определяться лексикографическим порядком первых элементов пар (по возрастанию),
+        /// а для равных первых элементов — лексикографическим порядком вторых элементов пар (по убыванию).
         /// </summary>
         public static void Task48()
         {
-            
+            IEnumerable<string> sequence1 = new List<string>() {"KSA53", "OBMKR34", "KSVM94KG", "MVKFDP34KD", "21JJJJFF", "KFK3445"};
+            IEnumerable<string> sequence2 = new List<string>() {"0596", "AAAAAAA", "AAAAAAO", "CDKMS944", "DFK"};
+            var answer = sequence1.Join(sequence2, item1 => item1.Length, item2 => item2.Length,
+                    (item1, item2) => new {First = item1, Second = item2}).OrderBy(o => o.First)
+                .ThenByDescending(o => o.Second);
+            foreach (var o in answer)
+            {
+                Console.WriteLine(o);
+            }
         }
         /// <summary>
-        /// 
+        /// Даны строковые последовательности A, B и С;
+        /// все строки в каждой последовательности различны, имеют ненулевую длину и содержат только цифры и заглавные буквы латинского алфавита.
+        /// Найти внутреннее объединение A, B и С, каждая тройка которого должна содержать строки, начинающиеся с одного и того же символа.
+        /// Представить найденное объединение в виде последовательности строк вида «EA=EB=EC», где EA, EB, EC — элементы из A, B, C соответственно.
+        /// Для различных элементов EA сохраняется исходный порядок их следования,
+        /// для равных элементов EA порядок троек определяется лексикографическим порядком элементов EB (по возрастанию),
+        /// а для равных элементов EA и EB — лексикографическим порядком элементов EC (по убыванию).
         /// </summary>
-        public static void Task49()
+        public static void Task49()//TODO непойму как делать сортировку
         {
-            
+            IEnumerable<string> sequence1 = new List<string>() {"KSA53", "OBMKR34", "KSVM94KG", "MVKFDP34KD", "21JJJJFF", "KFK3445"};
+            IEnumerable<string> sequence2 = new List<string>() {"0596", "AAAAAAA", "AAAAAAO", "CDKMS944", "KDFK"};
+            IEnumerable<string> sequence3 = new List<string>() {"JVKSP84", "MKS84jj", "KLVND32L", "MUEOF754"};
+            var answer = sequence1.Join(sequence2, i1 => i1.First(), i2 => i2.First(),
+                    (i1, i2) => new {I1 = i1, I2 = i2})
+                .Join(sequence3, i1 => i1.I1.First(), i2 => i2.First(),
+                    (i1, i2) => new {I1 = i1.I1, I2 = i1.I2, I3 = i2});
+            foreach (var o in answer)
+            {
+                Console.WriteLine(o);
+            }
         }
         /// <summary>
-        /// 
+        /// Даны строковые последовательности A и B; все строки в каждой последовательности различны и имеют ненулевую длину.
+        /// Получить последовательность строк вида «E:N», где E обозначает один из элементов последовательности A,
+        /// а N — количество элементов из B, начинающихся с то-го же символа, что и элемент E (например, «abc:4»); количество N может быть равно 0.
+        /// Порядок элементов полученной последовательности должен определяться исходным порядком элементов последовательности A.
+        /// Указание. Использовать метод GroupJoin.
         /// </summary>
         public static void Task50()
         {
+            IEnumerable<string> sequence1 = new List<string>() {"KSA53", "OBMKR34", "KSVM94KG", "MVKFDP34KD", "21JJJJFF", "KFK3445"};
+            IEnumerable<string> sequence2 = new List<string>() {"0596", "KMK02K", "AAAAAAO", "CDKMS944", "KDFK"};
+            var answer = sequence1.GroupJoin(sequence2, i1 => i1.First(), i2 => i2.First(),
+                (i1, i2) => $"{i1}:{i2.Count()}");
+            foreach (var s in answer)
+            {
+                Console.WriteLine(s);
+            }
+        }
+        /// <summary>
+        /// Даны последовательности положительных целых чисел A и B; все числа в последовательности A различны.
+        /// Получить последовательность строк вида «S:E», где S обозначает сумму тех чисел из B, которые оканчиваются на ту же цифру,
+        /// что и число E — один из элементов последовательности A (например, «74:23»); если для числа E не найдено ни одного подходящего числа
+        /// из последовательности B, то в качестве S указать 0.
+        /// Расположить элементы полученной последовательности по возрастанию значений найденных сумм,
+        /// а при равных суммах — по убыванию значений элементов A.
+        /// </summary>
+        public static void Task51()//TODO непойму как сортировать
+        {
+            IEnumerable<int> sequence1 = new List<int>() {1, 4, 71, 33, 9, 6, 22, 7, 5, 101};
+            IEnumerable<int> sequence2 = new List<int>() {3, 63, 251, 52, 43};
+            var answer = sequence1.GroupJoin(sequence2, i1 => i1 % 10, i2 => i2 % 10,
+                    (i, ints) => new {Count = ints.Count(), Number = i}).OrderBy(o => o.Count)
+                .ThenByDescending(o => o.Number);
+            foreach (var o in answer)
+            {
+                Console.WriteLine(o);
+            }
+        }
+        /// <summary>
+        /// Даны строковые последовательности A и B;
+        /// все строки в каждой последовательности различны, имеют ненулевую длину и содержат только цифры и заглавные буквы латинского алфавита.
+        /// Получить последовательность всевозможных комбинаций вида «EA=EB»,
+        /// где EA — некоторый эле- мент из A, EB — некоторый элемент из B, причем оба элемента оканчиваются цифрой (например, «AF3=D78»).
+        /// Упорядочить полученную последовательность в лексикографическом порядке по возрастанию элементов EA,
+        /// а при одинаковых элементах EA — в лексикографическом порядке по убыванию элементов EB.
+        /// Указание. Для перебора комбинаций использовать методы SelectMany и Select.
+        /// </summary>
+        public static void Task52()//TODO сделать
+        {
             
         }
         /// <summary>
-        /// 
+        /// Даны целочисленные последовательности A и B.
+        /// Получить последовательность всех различных сумм, в которых первое слагаемое берется из A, а второе из B.
+        /// Упорядочить полученную последовательность по возрастанию.
         /// </summary>
-        public static void Task51()
+        public static void Task53()
+        {
+            IEnumerable<int> sequence1 = new List<int>() {1, 4, 71, 33, 9, 6, 22, 7, 5, 101};
+            IEnumerable<int> sequence2 = new List<int>() {3, 63, 251, 52, 43};
+            var answer = sequence1.Join(sequence2, i1 => true, i2 => true, (i, i1) => i + i1).OrderBy(i => i);
+            foreach (var number in answer)
+            {
+                Console.WriteLine(number);
+            }
+        }
+
+        public static void Task54()
+        {
+            
+        }
+        public static void Task55()
+        {
+            
+        }
+        public static void Task56()
+        {
+            
+        }
+        public static void Task57()
+        {
+            
+        }
+        public static void Task58()
+        {
+            
+        }
+        public static void Task59()
+        {
+            
+        }
+        public static void Task60()
         {
             
         }
