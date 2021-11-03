@@ -739,12 +739,13 @@ namespace Practice.PracticeLINQ
         /// элементов последовательности A, а для равных первых элементов пар — лексикографическим порядком строковых
         /// представлений вторых элементов (по возрастанию).
         /// </summary>
-        public static void Task47()//TODO непойму как делать сортировку
+        public static void Task47()
         {
             IEnumerable<int> sequence1 = new List<int>() {1, 4, 71, 33, 9, 6, 22, 7, 5, 101};
             IEnumerable<int> sequence2 = new List<int>() {3, 63, 251, 52, 43};
             var answer = sequence1.Join(sequence2, num1 => (num1 % 10).ToString()[0], num2 => num2.ToString().First(),
-                (num1, num2) => $"{num1}:{num2}");
+                    (num1, num2) => new {Num1 = num1, Num2 = num2}).OrderBy(o => o.Num1).ThenBy(o => o.Num2)
+                .Select(o => $"{o.Num1}:{o.Num2}");
             foreach (var pair in answer)
             {
                 Console.WriteLine(pair);
@@ -869,7 +870,8 @@ namespace Practice.PracticeLINQ
             }
         }
         /// <summary>
-        /// Даны строковые последовательности A и B; все строки в каждой последовательности различны, имеют ненулевую длину и содержат только цифры и заглавные буквы латинского алфавита.
+        /// Даны строковые последовательности A и B; все строки в каждой последовательности различны,
+        /// имеют ненулевую длину и содержат только цифры и заглавные буквы латинского алфавита.
         /// Найти последовательность всех пар строк, удовлетворяющих следующим условиям:
         /// первый элемент пары принадлежит последовательности A, а второй либо является одним из элементов последовательности B,
         /// начинающихся с того же символа, что и первый элемент пары, либо является пустой строкой (если B не содержит ни одной подходящей строки).
@@ -880,11 +882,19 @@ namespace Practice.PracticeLINQ
         /// Расположить элементы полученной строковой последовательности в лексикографическом порядке по возрастанию.
         /// Указание. Использовать методы GroupJoin, DefaultIfEmpty, Select и SelectMany.
         /// </summary>
-        public static void Task54()// TODO доделать
+        public static void Task54()
         {
             IEnumerable<string> sequence1 = new List<string>() {"KSA53", "OBMKR34", "KSVM94KG", "MVKFDP34KD", "21JJJJFF", "KFK3445"};
             IEnumerable<string> sequence2 = new List<string>() {"0596", "KMK02K", "AAAAAAO", "CDKMS944", "KDFK"};
-            //var answer = sequence1.Join(sequence2, s1=>s1[0], s2=>)
+            var answer = sequence1.GroupJoin(sequence2, s1 => s1[0], s2 => s2[0], (str, seq) => new
+            {
+                Str = str,
+                Seq = seq.DefaultIfEmpty()
+            }).SelectMany(o => o.Seq.Select(str => o.Str + "." + str)).OrderBy(s => s);
+            foreach (var s in answer)
+            {
+                Console.WriteLine(s);
+            }
         }
         /// <summary>
         /// Даны последовательности положительных целых чисел A и B; все числа в каждой последовательности различны.
@@ -892,11 +902,18 @@ namespace Practice.PracticeLINQ
         /// оба элемента пары оканчиваются одной и той же цифрой.
         /// Представить найденное объединение в виде последовательности строк вида «EA:EB», где EA — число из A,
         /// а EB — либо одно из соответствующих ему чисел из B, либо 0 (если в B не содержится чисел, соответствующих EA).
-        /// Расположить элементы полученной последовательности по убыванию чисел EA, а при одинаковых числах EA — по воз- растанию чисел EB.
+        /// Расположить элементы полученной последовательности по убыванию чисел EA, а при одинаковых числах EA — по возрастанию чисел EB.
         /// </summary>
-        public static void Task55()//TODO Доделать
+        public static void Task55()
         {
-            
+            IEnumerable<int> sequence1 = new List<int>() {1, 4, 71, 33, 9, 6, 22, 7, 5, 101};
+            IEnumerable<int> sequence2 = new List<int>() {51, 61, 251, 52, 43};
+            var answer = sequence1.GroupJoin(sequence2, n1 => n1 % 10, n2 => n2 % 10,
+                (n, s) => new {Num = n, S = s.DefaultIfEmpty()}).SelectMany(o => o.S.Select(i => $"{o.Num}:{i}"));
+            foreach (var s in answer)
+            {
+                Console.WriteLine(s);
+            }
         }
         /// <summary>
         /// Дана целочисленная последовательность A.
@@ -904,12 +921,17 @@ namespace Practice.PracticeLINQ
         /// и на основе этой группировки получить последовательность строк вида «D:S»,
         /// где D — ключ группировки (т. е. некоторая цифра, которой оканчивается хотя бы одно из чисел последовательности A),
         /// а S — сумма всех чисел из A, которые оканчиваются цифрой D.
-        /// Полученную последовательность упорядочить по возраста- нию ключей.
+        /// Полученную последовательность упорядочить по возрастанию ключей.
         /// Указание. Использовать метод GroupBy.
         /// </summary>
-        public static void Task56()//TODO Доделать
+        public static void Task56()
         {
-            
+            IEnumerable<int> sequence = new List<int>() {1, 45, 71, 335, 9, 65, 22, 75, 5, 101};
+            var answer = sequence.GroupBy(n => n % 10).Select(g => $"{g.Key}:{g.Count()}").OrderBy(s => s);
+            foreach (var num in answer)
+            {
+                Console.WriteLine(num);
+            }
         }
         /// <summary>
         /// Дана целочисленная последовательность.
@@ -919,7 +941,8 @@ namespace Practice.PracticeLINQ
         public static void Task57()
         {
             IEnumerable<int> sequence = new List<int>() {1, 4, 71, 33, 3, 324, 22, 55, 5, 101};
-            var answer = sequence.GroupBy(i => i % 10, i => i, (_, numbers) => numbers.Max()).OrderBy(i => i % 10);
+            var answer = sequence.GroupBy(i => i % 10, i => i, (_, numbers) => numbers.Max())
+                .OrderBy(i => i % 10);
             foreach (var num in answer)
             {
                 Console.WriteLine(num);
