@@ -19,9 +19,26 @@ namespace Practice.PracticeLINQ
             public Client()
             {
                 Id = _idCount++;
-                Year = _rnd.Next(1990, 2022);
+                Year = _rnd.Next(2018, 2022);
                 Month = _rnd.Next(1, 13);
-                DurationOfClasses = _rnd.Next(1, 10);
+                DurationOfClasses = _rnd.Next(30, 60);
+            }
+
+            public bool DataLaterThan(Client client)
+            {
+                if (client.Year < Year) return false;
+                if (client.Month < Month) return false;
+                return true;
+            }
+
+            public static IEnumerable<Client> GetClientEnumerable(int count)//TODO: Подкоректировать метод
+            {
+                LinkedList<Client> sequence = new LinkedList<Client>();
+                for (var i = 0; i < count; i++)
+                {
+                    sequence.AddLast(new Client());
+                }
+                return sequence;
             }
         }
         
@@ -32,17 +49,16 @@ namespace Practice.PracticeLINQ
         /// Если имеется несколько элементов с минимальной продолжительностью, то вывести данные того из них,
         /// который является последним в исходной последовательности.
         /// </summary>
-        public static void Task1() // TODO: попробовать сделать за один проход вообще рили это?
+        public static void Task1()// сделал за один проход. Проверить со  Skip и без
         {
-            IEnumerable<Client> sequence = new[]
-                {new Client(), new Client(), new Client(), new Client(), new Client(), new Client(), new Client()};
+            IEnumerable<Client> sequence = Client.GetClientEnumerable(10);
             foreach (var client in sequence)
             {
                 Console.WriteLine("Id: " + client.Id + "\t" + "Month: " + client.Month + "\t" + "Year: " + client.Year +
                                   "\t" + "Duration:" + client.DurationOfClasses);
             }
-            var minDuration = sequence.Min(c => c.DurationOfClasses);
-            var answer = sequence.Reverse().First(c => c.DurationOfClasses == minDuration);
+            var answer = sequence.Skip(1).Aggregate(sequence.First(),
+                (min, next) => next.DurationOfClasses <= min.DurationOfClasses ? next : min);
             Console.WriteLine("Result");
             Console.WriteLine("Id: " + answer.Id + "\t" + "Month: " + answer.Month + "\t" + "Year: " + answer.Year +
                               "\t" + "Duration:" + answer.DurationOfClasses);
@@ -54,18 +70,18 @@ namespace Practice.PracticeLINQ
         /// Вывести эту продолжительность, а также соответствующие ей год и номер месяца (в указанном порядке на той же строке).
         /// Если имеется несколько элементов с максимальной продолжительностью, то вывести данные, соответствующие самой поздней дате.
         /// </summary>
-        public static void Task2()
+        public static void Task2()//TODO: Определится со Skip(1)
         {
-            IEnumerable<Client> sequence = new[]
-                {new Client(), new Client(), new Client(), new Client(), new Client(), new Client(), new Client()};
+            IEnumerable<Client> sequence = Client.GetClientEnumerable(10);
             foreach (var client in sequence)
             {
                 Console.WriteLine("Id: " + client.Id + "\t" + "Month: " + client.Month + "\t" + "Year: " + client.Year +
                                   "\t" + "Duration:" + client.DurationOfClasses);
             }
-            
-            var answer = sequence.OrderByDescending(c => c.DurationOfClasses).ThenBy(c => c.Year).First();
-            
+
+            var answer = sequence.Aggregate(sequence.First(),
+                (max, next) => next.DurationOfClasses > max.DurationOfClasses ? next :
+                    next.DurationOfClasses == max.DurationOfClasses && next.DataLaterThan(max) ? next : max);
             Console.WriteLine("Result");
             Console.WriteLine("Id: " + answer.Id + "\t" + "Month: " + answer.Month + "\t" + "Year: " + answer.Year +
                               "\t" + "Duration:" + answer.DurationOfClasses);
@@ -76,15 +92,34 @@ namespace Practice.PracticeLINQ
         /// Определить год, в котором суммарная продолжительность занятий всех клиентов была наибольшей,
         /// и вывести этот год и наибольшую суммарную продолжительность. Если таких годов было несколько, то вывести наименьший из них.
         /// </summary>
-        public static void Task3()
+        public static void Task3()//TODO: подумать над Skip(1)
         {
-            IEnumerable<Client> sequence = new[]
-                {new Client(), new Client(), new Client(), new Client(), new Client(), new Client(), new Client()};
-            int id = 1;
+            IEnumerable<Client> sequence = Client.GetClientEnumerable(10);
             foreach (var client in sequence)
             {
-                client.Id = id++;
+                Console.WriteLine("Id: " + client.Id + "\t" + "Month: " + client.Month + "\t" + "Year: " + client.Year +
+                                  "\t" + "Duration:" + client.DurationOfClasses);
             }
+
+            var yearGroups = sequence.GroupBy(c => c.Year)
+                .Select(g => new {Ds = g.Sum(c => c.DurationOfClasses), Y = g.Key});
+            var answer = yearGroups.Skip(1).Aggregate(yearGroups.First(),
+                (acc, next) => next.Ds > acc.Ds ? next : next.Ds == acc.Ds && next.Y < acc.Y ? next : acc);
+                
+            foreach (var g in sequence.GroupBy(c => c.Year))
+            {
+                Console.WriteLine("Год: " + g.Key);
+                Console.WriteLine( "Продолжительность:  " + g.Sum(c=>c.DurationOfClasses));
+                foreach (var c in g)
+                {
+                    Console.Write(c.DurationOfClasses + "   "); 
+                }
+                Console.WriteLine();
+            }
+
+            Console.WriteLine();
+            Console.WriteLine("Result");
+            Console.WriteLine(answer.Y + "   " + answer.Ds);
         }
         
         /// <summary>
