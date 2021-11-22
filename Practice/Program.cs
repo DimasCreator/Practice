@@ -1,6 +1,6 @@
 ﻿using System;
-using Practice.SimpleTasks;
+using Practice.Tasks;
 Console.WriteLine("Hello from Practice");
 
 
-T6.Task();
+T2.Task();
