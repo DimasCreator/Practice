@@ -12,7 +12,7 @@ namespace Practice.SimpleTasks
         public static void Task()
         {
             int[] sequence = {1, 2, 3, 4, 65, 4, 3, 2, 1};
-            var single = sequence.Aggregate(0, (acc, num) => acc ^ num); // TODO: почитать про XOR (в C# можно)
+            var single = sequence.Aggregate(0, (acc, num) => acc ^ num);
             Console.WriteLine(single);
         }
     }
