@@ -14,14 +14,14 @@ namespace Practice.PracticeLINQ
             public int Id;
             public int Year;
             public int Month;
-            public int DurationOfClasses;
+            public int DurationOfClassesPerMounth;
 
             public Client()
             {
                 Id = _idCount++;
                 Year = _rnd.Next(2018, 2022);
                 Month = _rnd.Next(1, 13);
-                DurationOfClasses = _rnd.Next(30, 60);
+                DurationOfClassesPerMounth = _rnd.Next(30, 60);
             }
 
             public bool DataLaterThan(Client client)
@@ -31,6 +31,11 @@ namespace Practice.PracticeLINQ
                 return true;
             }
 
+            public DateTime GetData()
+            {
+                return new DateTime(Year, Month, 1);
+            }
+
             public static IEnumerable<Client> GetClientEnumerable(int count)//TODO: Подкоректировать метод
             {
                 LinkedList<Client> sequence = new LinkedList<Client>();
@@ -38,8 +43,11 @@ namespace Practice.PracticeLINQ
                 {
                     sequence.AddLast(new Client());
                 }
+                
                 return sequence;
             }
+            
+            
         }
         
         /// <summary>
@@ -55,13 +63,13 @@ namespace Practice.PracticeLINQ
             foreach (var client in sequence)
             {
                 Console.WriteLine("Id: " + client.Id + "\t" + "Month: " + client.Month + "\t" + "Year: " + client.Year +
-                                  "\t" + "Duration:" + client.DurationOfClasses);
+                                  "\t" + "Duration:" + client.DurationOfClassesPerMounth);
             }
             var answer = sequence.Skip(1).Aggregate(sequence.First(),
-                (min, next) => next.DurationOfClasses <= min.DurationOfClasses ? next : min);
+                (min, next) => next.DurationOfClassesPerMounth <= min.DurationOfClassesPerMounth ? next : min);
             Console.WriteLine("Result");
             Console.WriteLine("Id: " + answer.Id + "\t" + "Month: " + answer.Month + "\t" + "Year: " + answer.Year +
-                              "\t" + "Duration:" + answer.DurationOfClasses);
+                              "\t" + "Duration:" + answer.DurationOfClassesPerMounth);
         }
         
         /// <summary>
@@ -76,15 +84,15 @@ namespace Practice.PracticeLINQ
             foreach (var client in sequence)
             {
                 Console.WriteLine("Id: " + client.Id + "\t" + "Month: " + client.Month + "\t" + "Year: " + client.Year +
-                                  "\t" + "Duration:" + client.DurationOfClasses);
+                                  "\t" + "Duration:" + client.DurationOfClassesPerMounth);
             }
 
             var answer = sequence.Aggregate(sequence.First(),
-                (max, next) => next.DurationOfClasses > max.DurationOfClasses ? next :
-                    next.DurationOfClasses == max.DurationOfClasses && next.DataLaterThan(max) ? next : max);
+                (max, next) => next.DurationOfClassesPerMounth > max.DurationOfClassesPerMounth ? next :
+                    next.DurationOfClassesPerMounth == max.DurationOfClassesPerMounth && next.DataLaterThan(max) ? next : max);
             Console.WriteLine("Result");
             Console.WriteLine("Id: " + answer.Id + "\t" + "Month: " + answer.Month + "\t" + "Year: " + answer.Year +
-                              "\t" + "Duration:" + answer.DurationOfClasses);
+                              "\t" + "Duration:" + answer.DurationOfClassesPerMounth);
         }
         
         /// <summary>
@@ -98,21 +106,21 @@ namespace Practice.PracticeLINQ
             foreach (var client in sequence)
             {
                 Console.WriteLine("Id: " + client.Id + "\t" + "Month: " + client.Month + "\t" + "Year: " + client.Year +
-                                  "\t" + "Duration:" + client.DurationOfClasses);
+                                  "\t" + "Duration:" + client.DurationOfClassesPerMounth);
             }
 
             var yearGroups = sequence.GroupBy(c => c.Year)
-                .Select(g => new {Ds = g.Sum(c => c.DurationOfClasses), Y = g.Key});
+                .Select(g => new {Ds = g.Sum(c => c.DurationOfClassesPerMounth), Y = g.Key});
             var answer = yearGroups.Skip(1).Aggregate(yearGroups.First(),
                 (acc, next) => next.Ds > acc.Ds ? next : next.Ds == acc.Ds && next.Y < acc.Y ? next : acc);
                 
             foreach (var g in sequence.GroupBy(c => c.Year))
             {
                 Console.WriteLine("Год: " + g.Key);
-                Console.WriteLine( "Продолжительность:  " + g.Sum(c=>c.DurationOfClasses));
+                Console.WriteLine( "Продолжительность:  " + g.Sum(c=>c.DurationOfClassesPerMounth));
                 foreach (var c in g)
                 {
-                    Console.Write(c.DurationOfClasses + "   "); 
+                    Console.Write(c.DurationOfClassesPerMounth + "   "); 
                 }
                 Console.WriteLine();
             }
@@ -131,12 +139,21 @@ namespace Practice.PracticeLINQ
         /// </summary>
         public static void Task4()
         {
-            IEnumerable<Client> sequence = new[]
-                {new Client(), new Client(), new Client(), new Client(), new Client(), new Client(), new Client()};
-            int id = 1;
+            IEnumerable<Client> sequence = Client.GetClientEnumerable(10).ToArray();
             foreach (var client in sequence)
             {
-                client.Id = id++;
+                Console.WriteLine("Id: " + client.Id + "\t" + "Month: " + client.Month + "\t" + "Year: " + client.Year +
+                                  "\t" + "Duration:" + client.DurationOfClassesPerMounth);
+            }
+            DateTime now = DateTime.Now;
+            var answer = sequence.Select(c => new
+            {
+                Id = c.Id,
+                SumDuration = c.DurationOfClassesPerMounth * (now - new DateTime(c.Year, c.Month, 1)).Days / 30
+            }).OrderBy(o => o.SumDuration).ThenBy(o => o.Id);
+            foreach (var item in answer)
+            {
+                Console.WriteLine(item.Id + "   " + item.SumDuration);
             }
         }
 
@@ -149,12 +166,21 @@ namespace Practice.PracticeLINQ
         /// </summary>
         public static void Task5()
         {
-            IEnumerable<Client> sequence = new[]
-                {new Client(), new Client(), new Client(), new Client(), new Client(), new Client(), new Client()};
-            int id = 1;
+            IEnumerable<Client> sequence = Client.GetClientEnumerable(10).ToArray();
             foreach (var client in sequence)
             {
-                client.Id = id++;
+                Console.WriteLine("Id: " + client.Id + "\t" + "Month: " + client.Month + "\t" + "Year: " + client.Year +
+                                  "\t" + "Duration:" + client.DurationOfClassesPerMounth);
+            }
+            DateTime now = DateTime.Now;
+            var answer = sequence.Select(c => new
+            {
+                Id = c.Id,
+                SumDuration = (now - new DateTime(c.Year, c.Month, 1)).Days / 30
+            }).OrderBy(o => o.SumDuration).ThenBy(o => o.Id);
+            foreach (var item in answer)
+            {
+                Console.WriteLine(item.Id + "   " + item.SumDuration);
             }
         }
         
@@ -166,15 +192,16 @@ namespace Practice.PracticeLINQ
         /// Сведения о каждом месяце выводить на новой строке и упорядочивать по убыванию суммарной продолжительности,
         /// продолжительности — по возрастанию номера месяца.
         /// </summary>
-        public static void Task6()
+        public static void Task6()//TODO: Доделать
         {
-            IEnumerable<Client> sequence = new[]
-                {new Client(), new Client(), new Client(), new Client(), new Client(), new Client(), new Client()};
-            int id = 1;
+            IEnumerable<Client> sequence = Client.GetClientEnumerable(5).ToArray();
             foreach (var client in sequence)
             {
-                client.Id = id++;
+                Console.WriteLine("Id: " + client.Id + "\t" + "Month: " + client.Month + "\t" + "Year: " + client.Year +
+                                  "\t" + "Duration:" + client.DurationOfClassesPerMounth);
             }
+
+            var answer = sequence.GroupBy(c => c.Month);
         }
         
         /// <summary>
@@ -187,14 +214,13 @@ namespace Practice.PracticeLINQ
         /// Упорядочивать сведения по убыванию номера года. Если данные о клиенте с кодом K отсутствуют,
         /// то записать в результирующий файл строку «Нет данных».
         /// </summary>
-        public static void Task7()
+        public static void Task7()//TODO: Сделать
         {
-            IEnumerable<Client> sequence = new[]
-                {new Client(), new Client(), new Client(), new Client(), new Client(), new Client(), new Client()};
-            int id = 1;
+            IEnumerable<Client> sequence = Client.GetClientEnumerable(5).ToArray();
             foreach (var client in sequence)
             {
-                client.Id = id++;
+                Console.WriteLine("Id: " + client.Id + "\t" + "Month: " + client.Month + "\t" + "Year: " + client.Year +
+                                  "\t" + "Duration:" + client.DurationOfClassesPerMounth);
             }
         }
         
@@ -206,13 +232,22 @@ namespace Practice.PracticeLINQ
         /// </summary>
         public static void Task8()
         {
-            IEnumerable<Client> sequence = new[]
-                {new Client(), new Client(), new Client(), new Client(), new Client(), new Client(), new Client()};
-            int id = 1;
+            IEnumerable<Client> sequence = Client.GetClientEnumerable(10).ToArray();
             foreach (var client in sequence)
             {
-                client.Id = id++;
+                Console.WriteLine("Id: " + client.Id + "\t" + "Month: " + client.Month + "\t" + "Year: " + client.Year +
+                                  "\t" + "Duration:" + client.DurationOfClassesPerMounth);
             }
+
+            var answer = sequence.Aggregate(sequence.First(),
+                (max, next) => next.DurationOfClassesPerMounth > max.DurationOfClassesPerMounth ? next :
+                    next.DurationOfClassesPerMounth == max.DurationOfClassesPerMounth ? next.GetData() < max.GetData()
+                        ?
+                        next
+                        : max : max);
+            Console.WriteLine("Answer");
+            Console.WriteLine("Id: " + answer.Id + "\t" + "Month: " + answer.Month + "\t" + "Year: " + answer.Year +
+                              "\t" + "Duration:" + answer.DurationOfClassesPerMounth);
         }
         
         /// <summary>
