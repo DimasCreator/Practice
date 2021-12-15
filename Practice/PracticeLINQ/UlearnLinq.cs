@@ -5,11 +5,6 @@ using System.Text.RegularExpressions;
 
 namespace Practice.PracticeLINQ
 {
-    public class Document
-    {
-        public int Id;
-        public string Text;
-    }
     public static class UlearnLinq
     {
         /// <summary>
@@ -129,12 +124,19 @@ namespace Practice.PracticeLINQ
 
         /// Обратный индекс в нашем случае — это словарь ILookup<string, int>, ключом в котором является слово,
         /// а значениями — идентификаторы всех документов, содержащих это слово.
-        public static IEnumerable<string> Task9(Document[] documents)
-        {
-            return documents
-                .ToDictionary(d => d.Id,
-                    d => Regex.Split(d.Text, @"\W+").Select(s => s.ToLower()).Where(s => !string.IsNullOrEmpty(s)));
-            //.ToLookup(d => Regex.Split(d.Text, @"\W+"), d => d.Id);
-        }//ILookup<string, int>
+        
+        // public class Document
+        // {
+        //     public int Id;
+        //     public string Text;
+        // }
+        
+        // public static IEnumerable<string> Task9(Document[] documents)
+        // {
+        //     return documents
+        //         .ToDictionary(d => d.Id,
+        //             d => Regex.Split(d.Text, @"\W+").Select(s => s.ToLower()).Where(s => !string.IsNullOrEmpty(s)));
+        //     //.ToLookup(d => Regex.Split(d.Text, @"\W+"), d => d.Id);
+        // }//ILookup<string, int>
     }
 }
