@@ -5,6 +5,11 @@ using System.Text.RegularExpressions;
 
 namespace Practice.PracticeLINQ
 {
+    public class Document
+    {
+        public int Id;
+        public string Text;
+    }
     public static class UlearnLinq
     {
         /// <summary>
@@ -69,6 +74,67 @@ namespace Practice.PracticeLINQ
                 .ToArray();
         }
         
+        /// <summary>
+        /// Дан текст, нужно составить список всех встречающихся в тексте слов, упорядоченный сначала по возрастанию длины слова, а потом лексикографически.
+        /// Запрещено использовать ThenBy и ThenByDescending.
+        /// </summary>
+        public static List<string> Task6(string text)
+        {
+            return Regex.Split(text, @"\W+")
+                .Where(s=>!string.IsNullOrEmpty(s))
+                .Select(s=>s.ToLower())
+                .Distinct()
+                .OrderBy(s => Tuple.Create(s.Length, s)).ToList();
+        }
         
+        /// <summary>
+        /// Дан список слов, нужно найти самое длинное слово из этого списка, а из всех самых длинных — лексикографически первое слово.
+        /// Решите эту задачу в одно выражение.
+        /// Не используйте методы сортировки — сложность сортировки O(N * log(N)), однако эту задачу можно решить за O(N).
+        /// </summary>
+        public static string Task7Aggregate(IEnumerable<string> words)
+        {
+            return words.Aggregate(words.First(),
+                (max, s) => s.Length > max.Length ? s :
+                    s.Length == max.Length ? string.CompareOrdinal(s, max) < 0 ? s : max : max);
+        }
+        public static string Task7Max(IEnumerable<string> words)
+        {
+            return words.Min(s => Tuple.Create(-s.Length, s))?.Item2;
+        }
+        
+        /// <summary>
+        /// Дан текст, нужно вывести count наиболее часто встречающихся в тексте слов вместе с их частотой.
+        /// Среди слов, встречающихся одинаково часто, отдавать предпочтение лексикографически меньшим словам.
+        /// Слова сравнивать регистронезависимо и выводить в нижнем регистре.
+        /// </summary>
+        public static Tuple<string, int>[] Task8(string text, int count)
+        {
+            return Regex.Split(text, @"\W+")
+                .Where(word => !string.IsNullOrEmpty(word))
+                .GroupBy(word => word.ToLower())
+                .OrderByDescending(g => g.Count())
+                .ThenBy(g => g.Key)
+                .Take(count)
+                .Select(g => Tuple.Create(g.Key, g.Count()))
+                .ToArray();
+        }
+        
+        /// <summary>
+        /// Обратный индекс — это структура данных, часто использующаяся в задачах полнотекстового поиска нужного документа в большой базе документов.
+        /// По своей сути обратный индекс напоминает индекс в конце бумажных энциклопедий, где для каждого ключевого слова указан список страниц, где оно встречается.
+        /// Вам требуется по списку документов построить обратный индекс.
+        /// Документ определен так:
+        /// </summary>
+
+        /// Обратный индекс в нашем случае — это словарь ILookup<string, int>, ключом в котором является слово,
+        /// а значениями — идентификаторы всех документов, содержащих это слово.
+        public static IEnumerable<string> Task9(Document[] documents)
+        {
+            return documents
+                .ToDictionary(d => d.Id,
+                    d => Regex.Split(d.Text, @"\W+").Select(s => s.ToLower()).Where(s => !string.IsNullOrEmpty(s)));
+            //.ToLookup(d => Regex.Split(d.Text, @"\W+"), d => d.Id);
+        }//ILookup<string, int>
     }
 }
