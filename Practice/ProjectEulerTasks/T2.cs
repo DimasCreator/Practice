@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Practice.ProjectEulerTasks
@@ -14,25 +15,22 @@ namespace Practice.ProjectEulerTasks
     {
         public static void Task()
         {
-            foreach (var fNum in GetSequence(4000000))
-            {
-                Console.WriteLine(fNum);
-            }
-            Console.WriteLine("Сумма: " + GetSequence(4000000).Where(i => i % 2 == 0).Sum());
+            var sum = GetSequence(1, 2, 4000000).Where(x => x % 2 == 0).Sum();
         }
 
-        private static IEnumerable<int> GetSequence(int max)
+        private static IEnumerable<int> GetSequence(int first, int second, int max)
         {
-            var sequence = new LinkedList<int>();
-            sequence.AddLast(1);
-            sequence.AddLast(2);
-            var next = sequence.Last.Value + sequence.Last.Previous.Value;
+            yield return first;
+            yield return second;
+            int next = first + second;
             while (next < max)
             {
-                sequence.AddLast(next);
-                next = sequence.Last.Value + sequence.Last.Previous.Value;
+                yield return next;
+                first = second;
+                int tmp = second;
+                second = next;
+                next += tmp;
             }
-            return sequence;
         }
     }
 }

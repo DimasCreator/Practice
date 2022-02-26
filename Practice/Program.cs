@@ -1,11 +1,10 @@
 ﻿using System;
+using static System.Math;
 using System.Linq;
 using System.Collections.Generic;
 using Practice.ProjectEulerTasks;
 
 Console.WriteLine("Hello from Practice");
-
-T3.Task();
 
 // Console.WriteLine(T6.Task("{[<>]}"));//True
 // Console.WriteLine(T6.Task("({}[])"));//False
